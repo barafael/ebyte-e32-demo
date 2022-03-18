@@ -8,6 +8,7 @@ use ebyte_e32::{
     Ebyte,
 };
 use hal::serial::{config::Config, Serial};
+use nb::block;
 // Halt on panic
 use crate::hal::{pac, prelude::*};
 use cortex_m_rt::entry;
@@ -29,8 +30,6 @@ fn main() -> ! {
         // Set up the system clock. We want to run at 48MHz for this one.
         let rcc = dp.RCC.constrain();
         let clocks = rcc.cfgr.sysclk(48.MHz()).freeze();
-
-        let mut delay_tim5 = dp.TIM5.delay_ms(&clocks);
 
         let gpioa = dp.GPIOA.split();
 
@@ -73,10 +72,32 @@ fn main() -> ! {
 
         rprintln!("Parameters after customization: {:#?}", params);
 
+        let tx_pin = gpioa.pa2.into_alternate();
+        let rx_pin = gpioa.pa3.into_alternate();
+
+        let mut serial = dp
+            .USART2
+            .serial(
+                (tx_pin, rx_pin),
+                Config::default().baudrate(9600.bps()),
+                &clocks,
+            )
+            .unwrap();
+
         loop {
-            delay_tim5.delay_ms(5000u32);
-            rprintln!("Sending it!");
-            ebyte.write_buffer(b"buffer").unwrap();
+            match ebyte.read() {
+                Err(nb::Error::WouldBlock) => {}
+                Err(e) => rprintln!("ebyte error: {:?}", e),
+                Ok(byte) => {
+                    block!(serial.write(byte)).unwrap();
+                    rprintln!("{}", byte);
+                }
+            }
+            match serial.read() {
+                Err(nb::Error::WouldBlock) => {}
+                Err(e) => rprintln!("serial error: {:?}", e),
+                Ok(byte) => block!(ebyte.write(byte)).unwrap(),
+            }
             led.toggle();
         }
     }
