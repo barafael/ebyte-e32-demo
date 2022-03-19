@@ -13,7 +13,7 @@ use nb::block;
 use crate::hal::{pac, prelude::*};
 use cortex_m_rt::entry;
 use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
+use rtt_target::{rprint, rprintln, rtt_init_print};
 use stm32f4xx_hal as hal;
 
 #[entry]
@@ -88,7 +88,7 @@ fn main() -> ! {
                 Err(e) => rprintln!("ebyte error: {:?}", e),
                 Ok(byte) => {
                     block!(serial.write(byte)).unwrap();
-                    rprintln!("{}", byte);
+                    rprint!("{}", byte as char);
                 }
             }
             match serial.read() {
