@@ -81,7 +81,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ebyte-test-f4"
+name = "ebyte-e32-demo"
 version = "0.1.0"
 dependencies = [
  "cortex-m",
