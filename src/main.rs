@@ -51,13 +51,12 @@ fn main() -> ! {
         // Create a delay abstraction based on SysTick
         let delay = cp.SYST.delay(&clocks);
 
-        let ebyte = Ebyte::new(serial, aux, m0, m1, delay).unwrap();
+        let mut ebyte = Ebyte::new(serial, aux, m0, m1, delay).unwrap();
 
-        let mut ebyte = ebyte.into_program_mode();
-        let model_data = ebyte.read_model_data().unwrap();
+        let model_data = ebyte.model_data().unwrap();
         rprintln!("Model data: {:#?}", model_data);
 
-        let mut params = ebyte.read_parameters().unwrap();
+        let mut params = ebyte.parameters().unwrap();
         rprintln!("Parameters unchanged: {:#?}", params);
 
         params.air_rate = AirBaudRate::Bps300;
@@ -67,8 +66,7 @@ fn main() -> ! {
             .set_parameters(&params, Persistence::Temporary)
             .unwrap();
 
-        let params = ebyte.read_parameters().unwrap();
-        let mut ebyte = ebyte.into_normal_mode();
+        let params = ebyte.parameters().unwrap();
 
         rprintln!("Parameters after customization: {:#?}", params);
 
