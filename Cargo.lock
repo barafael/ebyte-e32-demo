@@ -87,7 +87,6 @@ dependencies = [
  "cortex-m",
  "cortex-m-rt",
  "ebyte-e32",
- "embedded-hal 0.2.7",
  "nb 1.0.0",
  "panic-rtt-target",
  "rtt-target",
