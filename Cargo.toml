@@ -7,11 +7,11 @@ edition = "2021"
 cortex-m = "0.7.4"
 cortex-m-rt = "0.7.1"
 #ebyte-e32 = { path = "../ebyte-e32-rs" }
-ebyte-e32 = { git = "https://github.com/barafael/ebyte-e32-rs" }
+ebyte-e32 = { version = "0.5.0" }
 nb = "1.0.0"
 panic-rtt-target = { version = "0.1.2", features = ["cortex-m"] }
 rtt-target = { version = "0.3.1", features = ["cortex-m"] }
 
 [dependencies.stm32f4xx-hal]
 features = ["rt", "stm32f411"]
-version = "0.13.1"
+version = "0.12.0"
