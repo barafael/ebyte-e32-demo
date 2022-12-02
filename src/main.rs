@@ -4,7 +4,7 @@
 #![no_std]
 
 use ebyte_e32::{
-    parameters::{air_baudrate::AirBaudRate, baudrate::BaudRate, Persistence},
+    parameters::{AirBaudRate, BaudRate, Persistence},
     Ebyte,
 };
 use hal::serial::{config::Config, Serial};
